@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 const App = () => {
   const anecdotes = [
@@ -11,18 +11,44 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
   const randomAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
   }
 
+  const handleVote = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
+
+
+  const mostVotesIndex = votes.indexOf(Math.max(...votes))
+
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <button onClick={randomAnecdote}>New Anecdote</button>
+      <div>
+        <h1>Anecdote of the Day</h1>
+        <div>{anecdotes[selected]}</div>
+        <div>has {votes[selected]} votes</div>
+        <button onClick={handleVote}>Vote</button>
+        <button onClick={randomAnecdote}>Next Anecdote</button>
+      </div>
+      <div>
+        <h1>Anecdote with Most Votes</h1>
+        {votes[mostVotesIndex] === 0 ? (
+          <div>No votes yet</div>
+        ) : (
+          <div>
+            <div>{anecdotes[mostVotesIndex]}</div>
+            <div>has {votes[mostVotesIndex]} votes</div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
